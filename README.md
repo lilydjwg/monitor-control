@@ -2,6 +2,10 @@ A simple tool suitable for adjusting external monitor's brightness.
 
 Much faster than [ddcutil](https://github.com/rockowitz/ddcutil), still faster than [ddcset](https://github.com/arcnmx/ddcset-rs) which enumerates all monitors. And it matches monitor by the output name you see from xrandr / wayland-info output.
 
+To install, install rust and run `cargo build --release` and find the binary in `target/release/`.
+
+Usage:
+
 ```
 monitor-control 0.1.0
 lilydjwg <lilydjwg@gmail.com>
