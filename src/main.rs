@@ -42,10 +42,14 @@ fn get_i2c_dev(output: &str) -> String {
   };
   let mut dev = None;
   for entry in read_dir(output_dir.unwrap()).unwrap() {
-    let file_name = entry.unwrap().file_name();
+    let entry = entry.unwrap();
+    let file_name = entry.file_name();
     let name = file_name.to_str().unwrap();
     if name.starts_with("i2c-") {
       dev = Some(name.to_owned());
+    } else if name == "ddc" {
+      let link = entry.path().read_link().unwrap();
+      dev = Some(link.file_name().unwrap().to_string_lossy().into_owned())
     }
   }
 
