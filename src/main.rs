@@ -1,13 +1,28 @@
 use std::fs::read_dir;
+use std::num::ParseIntError;
 
 use clap::Parser;
 use ddc::Ddc;
 
-#[derive(Parser)]
+fn parse_feature_code(input: &str) -> Result<u8, ParseIntError> {
+  if let Some(s) = input.strip_prefix("0x") {
+    u8::from_str_radix(s, 16)
+  } else if let Some(s) = input.strip_suffix(&['h', 'H']) {
+    u8::from_str_radix(s, 16)
+  } else {
+    input.parse()
+  }
+}
+
+#[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Cli {
+  /// output name such as DP-1
   output_name: String,
+  /// feature code in decimal or 0xFF or FFh format
+  #[clap(value_parser = parse_feature_code)]
   feature_code: u8,
+  /// value to be set; when not present show current value
   feature_value: Option<u16>,
 }
 
