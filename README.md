@@ -7,7 +7,7 @@ To install, install rust and run `cargo build --release` and find the binary in 
 Usage:
 
 ```
-monitor-control 0.1.0
+monitor-control 0.2.0
 lilydjwg <lilydjwg@gmail.com>
 The fastest way to get / set DDC values for a monitor
 
@@ -15,9 +15,9 @@ USAGE:
     monitor-control <OUTPUT_NAME> <FEATURE_CODE> [FEATURE_VALUE]
 
 ARGS:
-    <OUTPUT_NAME>      
-    <FEATURE_CODE>     
-    <FEATURE_VALUE>    
+    <OUTPUT_NAME>      output name such as DP-1
+    <FEATURE_CODE>     feature code in decimal or 0xFF or FFh format
+    <FEATURE_VALUE>    value to be set; when not present show current value
 
 OPTIONS:
     -h, --help       Print help information
