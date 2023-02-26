@@ -60,7 +60,7 @@ fn main() {
   let cli = Cli::parse();
   let i2c_name = get_i2c_dev(&cli.output_name);
   let dev = format!("/dev/{}", i2c_name);
-  let mut ddc = ddc_i2c::from_i2c_device(&dev).unwrap();
+  let mut ddc = ddc_i2c::from_i2c_device(dev).unwrap();
   if let Some(v) = cli.feature_value {
     ddc.set_vcp_feature(cli.feature_code, v).unwrap();
     println!("{}", v);
