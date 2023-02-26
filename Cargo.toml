@@ -11,3 +11,4 @@ edition = "2021"
 clap = { version = "*", features = ["derive"] }
 ddc = "*"
 ddc-i2c = { version = "*", features = ["i2c-linux"] }
+eyre = "0.6.8"

@@ -3,6 +3,7 @@ use std::num::ParseIntError;
 
 use clap::Parser;
 use ddc::Ddc;
+use eyre::{Result, eyre};
 
 fn parse_feature_code(input: &str) -> Result<u8, ParseIntError> {
   if let Some(s) = input.strip_prefix("0x") {
@@ -27,7 +28,7 @@ struct Cli {
 }
 
 // /sys/class/drm/card*-{name}/i2c-*
-fn get_i2c_dev(output: &str) -> String {
+fn get_i2c_dev(output: &str) -> Result<String> {
   let mut output_dir = None;
   for entry in read_dir("/sys/class/drm").unwrap() {
     let path = entry.unwrap().path();
@@ -41,7 +42,8 @@ fn get_i2c_dev(output: &str) -> String {
     }
   };
   let mut dev = None;
-  for entry in read_dir(output_dir.unwrap()).unwrap() {
+  let output_dir = output_dir.ok_or_else(|| eyre!("output name not found in /sys/class/drm"))?;
+  for entry in read_dir(output_dir).unwrap() {
     let entry = entry.unwrap();
     let file_name = entry.file_name();
     let name = file_name.to_str().unwrap();
@@ -53,19 +55,21 @@ fn get_i2c_dev(output: &str) -> String {
     }
   }
 
-  dev.unwrap()
+  dev.ok_or_else(|| eyre!("i2c dev not found"))
 }
 
-fn main() {
+fn main() -> Result<()> {
   let cli = Cli::parse();
-  let i2c_name = get_i2c_dev(&cli.output_name);
+  let i2c_name = get_i2c_dev(&cli.output_name)?;
   let dev = format!("/dev/{}", i2c_name);
   let mut ddc = ddc_i2c::from_i2c_device(dev).unwrap();
   if let Some(v) = cli.feature_value {
-    ddc.set_vcp_feature(cli.feature_code, v).unwrap();
+    ddc.set_vcp_feature(cli.feature_code, v)?;
     println!("{}", v);
   } else {
-    let value = ddc.get_vcp_feature(cli.feature_code).unwrap();
+    let value = ddc.get_vcp_feature(cli.feature_code)?;
     println!("{} {}", value.value(), value.maximum());
   }
+
+  Ok(())
 }
