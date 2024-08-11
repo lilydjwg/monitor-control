@@ -49,6 +49,7 @@ fn get_i2c_dev(output: &str) -> Result<String> {
     let name = file_name.to_str().unwrap();
     if name.starts_with("i2c-") {
       dev = Some(name.to_owned());
+      break;
     } else if name == "ddc" {
       let link = entry.path().read_link().unwrap();
       dev = Some(link.file_name().unwrap().to_string_lossy().into_owned())
