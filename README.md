@@ -8,7 +8,7 @@ Usage:
 
 ```
 monitor-control 0.2.0
-lilydjwg <lilydjwg@gmail.com>
+
 The fastest way to get / set DDC values for a monitor
 
 USAGE:
